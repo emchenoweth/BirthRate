@@ -17,9 +17,6 @@ nmodels<-5000 # how many model simluations do you want to run?
 age<-0:ma
 Year1<-rep(10,ma+1)
 Year1<-round(Sim[100,]*5)
-S#im<-as.data.frame(rbind(age,Gen1))
-
-Rand.S<-(rbinom(x,1,.S))
 
 survival<- function(x,.S=S){
   sum(rbinom(x,1,.S))}
@@ -67,8 +64,8 @@ simulation.ns<-function(F.max,.S=S.max, .Sc=Sc, .ma = ma, .tp = round(tp), .OYO 
   #lm<-abs(mod$coefficients[2])
   #print(lm)
   #if(sum(Sim[100,])<75) {print(NA)} else { 
-    print(abs(sum(Sim[100,])-sum(Sim[200,])))
-  #print(abs(Sim[100,1]-Sim[200,1]))
+    #print(abs(sum(Sim[100,])-sum(Sim[200,])))
+  print(abs(Sim[100,1]-Sim[200,1]))
 }
 
 F.max_vector<-c()
@@ -78,6 +75,7 @@ n<-1
 #with parameters as random variables
 parameters<-c()
 while (n < nmodels){
+  n
   tp<-rnorm(1,11.8,0.76) #mean female reproductive rate Gabriele 2007 in Zerbini 2010
   S.max<- rnorm(1,0.996,0.02)
   if(S.max>0.999) {S.max<-0.999}
@@ -91,7 +89,7 @@ while (n < nmodels){
   Fmax.sim<-0.001
   while (Fmax.sim < (0.0011+z)){
     z<-z+0.001
-  Fmax.sim<-optim(0.4,simulation.ns, lower = 0.001+z, upper = 0.8, method = "Brent")$par
+  Fmax.sim<-optim(0.04,simulation.ns, lower = 0.001+z, upper = 0.8, method = "Brent")$par
   }
   
   simulation.ns(Fmax.sim)
@@ -103,7 +101,7 @@ while (n < nmodels){
   
   n<-n+1
   parameters<- rbind(parameters, c(tp,S.max,S,Fmax.sim,Fmean,Sc,ma,OYO,cbr.S))
-  plot(apply(Sim,FUN=sum,1 ))
+  #plot(apply(Sim,FUN=sum,1 ))
 }
 parameters<-as.data.frame(parameters)
 names(parameters)<-c("tp", "S.max","S","Fmax.sim","Fmean","Sc","ma","OYO","cbr.S")
